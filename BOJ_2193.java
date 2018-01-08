@@ -1,25 +1,25 @@
 import java.io.FileInputStream;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
-
-	public static void main(String[] args) throws Exception {
-
+	public static void main(String args[]) throws Exception {
+		// Scanner sc = new Scanner(System.in);
 		Scanner sc = new Scanner(new FileInputStream("input.txt"));
 
-		int n = sc.nextInt();
-		int[] arr = new int[n + 1];
-		int[] dp = new int[n + 1];
-		int max = Integer.MIN_VALUE;
-		for (int i = 1; i <= n; i++) {
-			arr[i] = sc.nextInt();
-		}
-		for (int i = 1; i <= n; i++) {
-			dp[i] = Math.max(arr[i], dp[i - 1] + arr[i]);
-			max = max > dp[i] ? max : dp[i];
+		int N = sc.nextInt();
 
-			System.out.println(arr[i] + " vs (" + dp[i - 1] + " + " + arr[i] + ")");
+		int[] arr = new int[N];
+		if (N == 1) {
+			arr[0] = 1;
+		} else if (N == 2) {
+			arr[1] = 1;
+		} else {
+			arr[0] = 1;
+			arr[1] = 1;
+			for (int i = 2; i < N; i++) {
+				arr[i] = arr[i - 1] + arr[i - 2];
+			}
 		}
-		System.out.println(max);
+		System.out.println(arr[N-1]);
 	}
 }
