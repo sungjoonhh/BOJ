@@ -1,31 +1,27 @@
+import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.util.Arrays;
-import java.util.Scanner;
+import java.io.InputStreamReader;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("input.txt")));
+		String[] str = br.readLine().split(" ");
+		int n = Integer.parseInt(str[0]);
+		int m = Integer.parseInt(str[1]);
 
-		Scanner sc = new Scanner(new FileInputStream("input.txt"));
-		// Scanner sc1 = new Scanner(System.in);
-
-		int Testcase = sc.nextInt();
-
-		for (int i = 0; i < Testcase; i++) {
-			int n = sc.nextInt();
-			int[] dp = new int[n];
-
-			dp[0] = 1;
-			if (n > 1) {
-				dp[1] = 2;
-				if (n > 2) {
-					dp[2] = 4;
-				}
+		int[][] arr = new int[n + 1][m + 1];
+		for (int i = 1; i <= n; i++) {
+			str = br.readLine().split(" ");
+			for (int j = 1; j <= m; j++) {
+				arr[i][j] = Integer.parseInt(str[j-1]);
 			}
-			for (int j = 3; j < n; j++) {
-				dp[j] = dp[j - 3] + dp[j - 2] + dp[j - 1];
-			}
-
-			System.out.println(dp[n - 1]);
 		}
+
+		for (int i = 1; i <= n; i++) {
+			for (int j = 1; j <= m; j++) {
+				arr[i][j] += Math.max(arr[i][j-1],Math.max(arr[i-1][j], arr[i-1][j-1]));
+			}
+		}
+		System.out.println(arr[n][m]);
 	}
 }
