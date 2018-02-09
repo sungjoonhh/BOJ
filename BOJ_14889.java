@@ -5,13 +5,15 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
-		Scanner sc = new Scanner(new FileInputStream("input.txt"));
+		//Scanner sc = new Scanner(new FileInputStream("input.txt"));
+        Scanner sc = new Scanner(System.in);
 		int n = sc.nextInt();
 		int[][] arr = new int[n][n];
 
 		int[] start = new int[n];
 		int[] link = new int[n];
 		int min = Integer.MAX_VALUE;
+
 
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < n; j++) {
@@ -48,17 +50,17 @@ public class Main {
 						link[link_cnt++] = k;
 					}
 				}
-
-				for (int x = 0; x < n / 2; x++) {
-					for (int y = 0; y < n / 2; y++) {
+				
+				for(int x=0; x<n/2; x++){
+					for(int y=0; y<n/2; y++){
 						start_sum += arr[start[x]][start[y]];
 						link_sum += arr[link[x]][link[y]];
 					}
 				}
-				if (min > Math.abs(start_sum - link_sum)) {
-					min = Math.abs(start_sum - link_sum);
+				if(min > Math.abs(start_sum- link_sum)){
+					min = Math.abs(start_sum- link_sum);
 				}
-
+			
 			}
 
 		}
