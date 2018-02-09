@@ -1,94 +1,46 @@
+import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Scanner;
 
-public class Main {
+class Main {
+	public static void main(String args[]) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-	public static void main(String[] args) throws Exception {
-		// TODO Auto-generated method stub
-		Scanner sc = new Scanner(new FileInputStream("input.txt"));
-		// Scanner sc = new Scanner(System.in);
-		int n = sc.nextInt();
-		while (n != 0) {
+		while (true) {
+			String[] str = br.readLine().split(" ");
+			int N = Integer.parseInt(str[0]);
+			int[] arr = new int[N];
+			int[] result = new int[N];
 
-			int[] arr = new int[n];
-
-			Queue<int[]> q = new LinkedList();
-			for (int i = 0; i < n; i++) {
-				arr[i] = sc.nextInt();
+			if (N == 0) {
+				break;
+			}
+			for (int i = 0; i < N; i++) {
+				arr[i] = Integer.parseInt(str[i + 1]);
 			}
 
-			for (int i = 0; i < 1 << n; i++) {
-				// System.out.print(i + " : ");
-
+			for (int i = (1<<N)-1; i >=0; i--) {
+				Arrays.fill(result, 0);
+				int count = 0;
 				int bit = i;
-				int cnt = 0;
-				int[] temp = new int[6];
 				for (int j = 0; bit != 0; j++, bit >>= 1) {
-
 					if ((1 & bit) == 0) {
 						continue;
 					}
-					temp[cnt++] = arr[j];
-					if (cnt == 6) {
-						//Arrays.sort(temp);
-						q.add(temp);
-						for (int t = 0; t < 6; t++) {
-							//System.out.print(temp[t] + " ");
-						}
-						//System.out.println();
-						break;
-					}
+					result[Math.abs((N-1)-j)] = 1;
+					count++;
 				}
-			}
-
-			int[] lotto = new int[6];
-			int[][] result = new int[100][6];
-			int num = 0;
-			while (!q.isEmpty()) {
-				lotto = q.poll();
-
-				int count = 0;
-				boolean duplicate = false;
-				for(int i=0; i<num; i++){
-					for(int j=0; j<6; j++){
-						if(result[i][j]==lotto[j]){
-							//System.out.println(result[i][j] +"  "+lotto[j]);
-							count++;
-						}
+				if (count == 6) {
+					for (int k = 0; k <N; k++) {
+						if(result[k]==1)
+						System.out.print(arr[k] + " ");
 					}
-					if(count==6){
-						duplicate = true;
-					}
-					count = 0;
+					System.out.println();
 				}
-				if(!duplicate){
-					for (int i = 0; i < 6; i++) {
-						result[num][i] = lotto[i];
-					}
-					num++;
-				}
-			
-			
-			}
-
-			
-			
-			
-			
-			
-			for (int i = 0; i < num; i++) {
-				for (int j = 0; j < 6; j++) {
-					System.out.print(result[i][j] + " ");
-				}
-				System.out.println();
 			}
 			System.out.println();
-			n = sc.nextInt();
-
 		}
 
 	}
