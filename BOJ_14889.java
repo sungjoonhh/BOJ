@@ -1,72 +1,82 @@
+import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.util.Scanner;
+import java.io.InputStreamReader;
 
-public class Main {
+class Main {
+	static int[][] arr;
+	static int[] result;
+	static int N;
+	static int count;
+	static int[] start;
+	static int[] link;
+	static int min = Integer.MAX_VALUE;
 
 	public static void main(String[] args) throws Exception {
-		// TODO Auto-generated method stub
-		//Scanner sc = new Scanner(new FileInputStream("input.txt"));
-        Scanner sc = new Scanner(System.in);
-		int n = sc.nextInt();
-		int[][] arr = new int[n][n];
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String[] str = br.readLine().split(" ");
+		N = Integer.parseInt(str[0]);
 
-		int[] start = new int[n];
-		int[] link = new int[n];
-		int min = Integer.MAX_VALUE;
-
-
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < n; j++) {
-				arr[i][j] = sc.nextInt();
+		arr = new int[N][N];
+		result = new int[N];
+		start = new int[N];
+		link = new int[N];
+		for (int i = 0; i < N; i++) {
+			str = br.readLine().split(" ");
+			for (int j = 0; j < N; j++) {
+				arr[i][j] = Integer.parseInt(str[j]);
+				// arr[i] = integer.parseint(str[i + 1]);
 			}
 		}
-
-		for (int i = 1; i < 1 << n; i++) {
-			int[] value = new int[n];
-			int count = 0;
-
-			int bit = i;
-			for (int j = 0; bit != 0; j++, bit >>= 1) {
-				if ((1 & bit) == 0) {
-					continue;
-				}
-				value[j] = 1;
-			}
-
-			for (int k = 0; k < n; k++) {
-				if (value[k] == 1) {
-					count++;
-				}
-			}
-			if (count == n / 2) {
-				int start_sum = 0;
-				int link_sum = 0;
-				int start_cnt = 0;
-				int link_cnt = 0;
-				for (int k = 0; k < n; k++) {
-					if (value[k] == 1) {
-						start[start_cnt++] = k;
-					} else {
-						link[link_cnt++] = k;
-					}
-				}
-				
-				for(int x=0; x<n/2; x++){
-					for(int y=0; y<n/2; y++){
-						start_sum += arr[start[x]][start[y]];
-						link_sum += arr[link[x]][link[y]];
-					}
-				}
-				if(min > Math.abs(start_sum- link_sum)){
-					min = Math.abs(start_sum- link_sum);
-				}
-			
-			}
-
-		}
-
+		DFS(0, 0);
 		System.out.println(min);
+	}
+
+	public static void DFS(int start, int depth) {
+
+		for (int i = start; i < N; i++) {
+			result[i] = 1;
+			count++;
+
+			DFS(i + 1, depth + 1);
+			result[i] = 0;
+			count--;
+		}
+		if (count == N / 2){
+			//print();
+			calc();
+		}
 
 	}
 
+	public static void print() {
+		for (int i = 0; i < N; i++) {
+			System.out.print(result[i] + " ");
+		}
+		System.out.println();
+	}
+
+	public static void calc() {
+		int start_sum = 0;
+		int liNk_sum = 0;
+		int start_cNt = 0;
+		int liNk_cNt = 0;
+		for (int k = 0; k < N; k++) {
+			if (result[k] == 1) {
+				start[start_cNt++] = k;
+			} else {
+				link[liNk_cNt++] = k;
+			}
+		}
+
+		for (int x = 0; x < N / 2; x++) {
+			for (int y = 0; y < N / 2; y++) {
+				start_sum += arr[start[x]][start[y]];
+				liNk_sum += arr[link[x]][link[y]];
+			}
+		}
+		if (min > Math.abs(start_sum - liNk_sum)) {
+			min = Math.abs(start_sum - liNk_sum);
+		}
+
+	}
 }
