@@ -1,66 +1,36 @@
+import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.util.*;
+import java.io.InputStreamReader;
 
 public class Main {
 
-	static int[][] arr;
-	static boolean[][] visited;
-	static int[] dx = { -1, 0, 1, 0 };
-	static int[] dy = { 0, -1, 0, 1 };
-	static int N;
-	static int M;
-
 	public static void main(String args[]) throws Exception {
-		// Scanner sc = new Scanner(System.in);
-		Scanner sc = new Scanner(new FileInputStream("input.txt"));
+		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("input.txt")));
+		// BufferedReader br = new BufferedReader(new
+		// InputStreamReader(System.in));
 
-		N = sc.nextInt();
-		M = sc.nextInt();
-		sc.nextLine();
-		arr = new int[N][M];
-		visited = new boolean[N][M];
-		for (int i = 0; i < N; i++) {
-			String str = sc.nextLine();
-			for (int j = 0; j < M; j++) {
-				arr[i][j] = str.charAt(j)-'0';
-				visited[i][j] = false;
-			}
-		}
-		visited[0][0] = true;
-		BFS(0, 0);
-		System.out.println(arr[N - 1][M - 1]);
-	}
-
-	static public void BFS(int x, int y) {
-
-		Queue<Dot> q = new LinkedList<Dot>();
-		q.add(new Dot(x, y));
-		while (!q.isEmpty()) {
-			Dot d = q.poll();
-			for (int i = 0; i < 4; i++) {
-				int nextX = d.x + dx[i];
-				int nextY = d.y + dy[i];
-
-				if (nextX < 0 || nextY < 0 || nextX >= N || nextY >= M) {
-					continue;
+		int Testcase = Integer.parseInt(br.readLine());
+		int[][] arr;
+		int[][] dp;
+		String[] str;
+		for (int t = 0; t < Testcase; t++) {
+			int N = Integer.parseInt(br.readLine());
+			arr = new int[N+1][2];
+			dp = new int[N+1][2];
+			for (int i = 0; i < 2; i++) {
+				str = br.readLine().split(" ");
+				for (int j = 1; j <=N; j++) {
+					arr[j][i] = Integer.parseInt(str[j-1]);
 				}
-				if (visited[nextX][nextY] || arr[nextX][nextY] == 0) {
-					continue;
-				}
-				q.add(new Dot(nextX, nextY));
-				arr[nextX][nextY] = arr[d.x][d.y] + 1;
-				visited[nextX][nextY] = true;
 			}
+			
+			dp[1][0] = arr[1][0];
+			dp[1][1] = arr[1][1];
+			for(int i=2; i<=N; i++){
+				dp[i][0] = Math.max(dp[i-1][1],dp[i-2][1] ) + arr[i][0];
+				dp[i][1] = Math.max(dp[i-1][0],dp[i-2][0] ) + arr[i][1];
+			}
+			System.out.println(Math.max(dp[N][0], dp[N][1]));
 		}
-	}
-}
-
-class Dot {
-	int x;
-	int y;
-
-	Dot(int x, int y) {
-		this.x = x;
-		this.y = y;
 	}
 }
