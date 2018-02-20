@@ -1,111 +1,125 @@
-import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Arrays;
+import java.util.Scanner;
 
 public class Main {
-
-	static int[] dx = { -1, 0, 1, 0 };
-	static int[] dy = { 0, 1, 0, -1 };
-	static int N;
-	static int M;
-	static int count = 0;
+	static int seo = 3;
+	static int dong = 1;
+	static int nam = 2;
+	static int buk = 0;
 
 	public static void main(String[] args) throws Exception {
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("input.txt")));
+		Scanner sc = new Scanner(new FileInputStream("input.txt"));
+		Scanner sc1 = new Scanner(System.in);
+		int N = sc.nextInt();
+		int M = sc.nextInt();
 
-		String[] str = br.readLine().split(" ");
+		int r = sc.nextInt()+1;
+		int c = sc.nextInt()+1;
+		int d = sc.nextInt();
 
-		N = Integer.parseInt(str[0]);
-		M = Integer.parseInt(str[1]);
-		str = br.readLine().split(" ");
-		int start_x = Integer.parseInt(str[0]);
-		int start_y = Integer.parseInt(str[1]);
-		int start_dir = Integer.parseInt(str[2]);
+		int[][] arr = new int[N + 2][M + 2];
 
-		int[][] arr = new int[N][M];
-
-		for (int i = 0; i < N; i++) {
-			str = br.readLine().split(" ");
-			for (int j = 0; j < M; j++) {
-				arr[i][j] = Integer.parseInt(str[j]);
+		for (int i = 1; i <= N; i++) {
+			for (int j = 1; j <= M; j++) {
+				arr[i][j] = sc.nextInt();
 			}
 		}
-		//--------------입력--------------
-		
-		Search(arr, start_x, start_y, start_dir);	//청소 실행 함수
-		Check(arr);	//청소한 칸의 개수를 구함
-		System.out.println(count);
-	}
+		int cnt = 0;
+		int result = 0;
+		while (r > 0 && c > 0 && r <= N && c <= M) {
+			arr[r][c] = -1;
+			 System.out.println((r-1) + " " + (c-1) + " " + d);
+			 sc1.nextLine();
+			if (cnt == 4) {
+				if (d == dong) {
+					if (arr[r][c - 1] == 1) {
+						break;
+					}
+					c--;
 
-	public static void Search(int[][] arr, int start_x, int start_y, int start_dir) {
-		Queue<Dot> q = new LinkedList<Dot>();
-		arr[start_x][start_y] = 2;
-		q.add(new Dot(start_x, start_y, start_dir));
-		while (!q.isEmpty()) {
-			Dot d = q.poll();
-			int currentX = d.x;	//현재 x좌표
-			int currentY = d.y;	//현재 y좌표
-			int currentD = d.dir;	//현재 방향
-			System.out.println(currentX +" "+currentY);
-			Boolean flags = false;	//4방향이 다 청소돼있거나 벽일 경우를 판단해줌.
-			int nextX;
-			int nextY;
-			int nextD;
-
-			for (int i = 0; i < 4; i++) {
-				currentD = (currentD + 3) % 4;	//다음 이동할 방향
-				nextX = currentX + (dx[currentD]);	//다음 이동할 X좌표
-				nextY = currentY + (dy[currentD]);	//다음 이동할 Y좌표
-
-				Dot nextDot = new Dot(nextX, nextY, currentD);
-				if (nextX < 0 || nextY < 0 || nextX >= N || nextY >= M) {
-					continue;
+				} else if (d == seo) {
+					if (arr[r][c + 1] == 1) {
+						break;
+					}
+					c++;
 				}
-				//다음 이동할 위치가  청소되지 않은 곳이라면 ㄱ
-				if (arr[nextX][nextY] == 0) {
-					q.add(nextDot);
-					arr[nextX][nextY] = arr[currentX][currentY]+1;
-					flags = true;
-					break;
+
+				else if (d == nam) {
+					if (arr[r - 1][c] == 1) {
+						break;
+					}
+					r--;
+				} else if (d == buk) {
+					if (arr[r + 1][c] == 1) {
+						break;
+					}
+					r++;
 				}
+				cnt = 0;
 			}
-			if (!flags) {
-				nextD = (currentD + 2) % 4;
-				nextX = currentX + dx[nextD];
-				nextY = currentY + dy[nextD];
 
-				if (arr[nextX][nextY] != 1) {
-					arr[nextX][nextY] = arr[currentX][currentY]+1;
-					q.add(new Dot(nextX, nextY, currentD));
+			else {
+				if (d == dong) {
+					if (arr[r - 1][c] == 0) {
+						cnt = 0;
+						r--;
+						result++;
+					} else {
+						cnt++;
+					}
+					d = buk;
+
+				} else if (d == seo) {
+					if (arr[r + 1][c] == 0) {
+						cnt = 0;
+
+						r++;
+						result++;
+					} else {
+						cnt++;
+					}
+					d = nam;
+
+				}
+
+				else if (d == nam) {
+					if (arr[r][c + 1] == 0) {
+						cnt = 0;
+
+						c++;
+						result++;
+					} else {
+						cnt++;
+					}
+					d = dong;
+
+				} else if (d == buk) {
+					if (arr[r][c - 1] == 0) {
+						cnt = 0;
+
+						c--;
+						result++;
+					} else {
+						cnt++;
+					}
+					d = seo;
+
 				}
 			}
 		}
-	}
-
-	//청소한 칸의 개수를 구하는 함수
-	public static void Check(int[][] arr) {
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < M; j++) {
-				if (arr[i][j] == 9)
-					count++;
-				System.out.print(arr[i][j] + "\t");
+		result = 0;
+		for (int i = 1; i <= N; i++) {
+			for (int j = 1; j <= M; j++) {
+				//System.out.print(arr[i][j] + "\t");
+				if (arr[i][j] == -1) {
+					result++;
+				}
 			}
-			System.out.println();
+			//System.out.println();
+
 		}
-	}
-}
-
-class Dot {
-	int x;
-	int y;
-	int dir;
-
-	Dot(int x, int y, int dir) {
-		this.x = x;
-		this.y = y;
-		this.dir = dir;
+		System.out.println(result);
 	}
 }
