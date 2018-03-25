@@ -1,37 +1,47 @@
+import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Scanner;
+import java.io.InputStreamReader;
 
-public class Main {
-	static int zero;
-	static int one;
+class Main {
+
+	static BufferedReader br;
+
 	public static void main(String[] args) throws Exception {
-		// TODO Auto-generated method stub
-		Scanner sc = new Scanner(new FileInputStream("input.txt"));
-		// Scanner sc = new Scanner(System.in);
-		int T = sc.nextInt();
-		for (int testcase = 0; testcase < T; testcase++) {
-			zero = 0;
-			one = 0;
-			int N = sc.nextInt();
+
+		//br = new BufferedReader(new InputStreamReader(System.in));
+		br = new BufferedReader(new InputStreamReader(new FileInputStream("input.txt")));
+		int TestCase = Integer.parseInt(br.readLine());
+
+		for (int t = 0; t < TestCase; t++) {
+			int n = Integer.parseInt(br.readLine());
+			int[] dp = new int[n+1];
+			int[][] arr = new int[n+1][2];
+			if(n==0) {
+				System.out.println("1 0");
+				continue;
+			}
+			if(n==1){
+				System.out.println("0 1");
+				continue;
+			}
 			
-			fibonacci(N);
-			System.out.println(zero +" "+ one);
+			dp[0] = 1;
+			dp[1] = 1;
 			
+			arr[0][0] = 1;
+			arr[1][1] = 1;
+			
+			for(int i=2; i<=n; i++){
+				dp[i] = dp[i-1]+ dp[i-2];
+				arr[i][0] = arr[i-1][0]+arr[i-2][0];
+				arr[i][1] = arr[i-1][1]+arr[i-2][1];
+				
+			}
+
+			System.out.println(arr[n][0]+" "+arr[n][1]);
+			
+			
+
 		}
 	}
-
-	static public int fibonacci(int n) {
-		if (n == 0) {
-			zero++;
-			return 0;
-		} else if (n == 1) {
-			one++;
-			return 1;
-		} else {
-			return fibonacci(n - 1) + fibonacci(n - 2);
-		}
-	}
-
 }
