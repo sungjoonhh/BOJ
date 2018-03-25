@@ -1,28 +1,27 @@
+import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.util.Scanner;
+import java.io.InputStreamReader;
 
-public class Main {
-
+class Main {
 	public static void main(String[] args) throws Exception {
-
-		Scanner sc = new Scanner(new FileInputStream("input.txt"));
-
-		// Scanner sc = new Scanner(System.in);
-
-		int x = sc.nextInt();
-
-		long[] arr = new long[x];
-
-		if (x > 0) {
-			arr[0] = 1;
+		//BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("input.txt")));
+		int N = Integer.parseInt(br.readLine());
+		String[] str = br.readLine().split(" ");
+		int[] arr = new int[N];
+		int[] dp = new int[N];
+		int max;
+		for (int i = 0; i < N; i++) {
+			arr[i] = Integer.parseInt(str[i]);
 		}
-		if (x > 1) {
-			arr[1] = 1;
+		dp[0] = arr[0];
+		max = arr[0];
+		for(int i=1; i<N; i++){
+			dp[i] = Math.max(dp[i-1]+arr[i], arr[i]);
+			
+			max = Math.max(max, dp[i]);
 		}
-
-		for (int i = 2; i < x; i++) {
-			arr[i] = arr[i - 1] + arr[i - 2];
-		}
-		System.out.println(arr[x - 1]);
+		System.out.println(max);
+		
 	}
 }
